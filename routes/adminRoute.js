@@ -1,8 +1,5 @@
 const router = require("express").Router();
 const Admin = require("../models/adminModel");
-const Landlord = require("../models/landlordModel");
-const Branch = require("../models/branchModel")
-
 
 
 // Get All admins
