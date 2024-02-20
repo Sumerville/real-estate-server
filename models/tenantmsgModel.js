@@ -22,11 +22,15 @@ const tenantmsgSchema = new mongoose.Schema({
     appartment:{
         type:String,
     },
+    isDeleted: {
+        type: Boolean,
+        default: false
+    },
     createdAt:{
         type:Date,
         default:Date.now
     }
 })
 
-const tenantmsg = mongoose.model("lanmsgs", tenantmsgSchema)
+const tenantmsg = mongoose.model("tenantmsgs", tenantmsgSchema)
 module.exports = tenantmsg

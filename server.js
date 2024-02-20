@@ -12,10 +12,18 @@ const authRoute = require("./routes/authRoute");
 const adminRoute = require("./routes/adminRoute");
 const landlordRoute = require ("./routes/landlordRoute");
 const branchRoute = require("./routes/branchRoute");
+const tenantRoute = require("./routes/tenantRoute");
+const lanMsgs = require("./routes/landlordmsgRoute");
+const tenantMsgs = require ("./routes/tenantmsgRoute");
 
 // middleware
 
 app.use("/api/v1/users", userRoute);
+app.use("/api/v1/tenants", tenantRoute);
+
+app.use("/api/v1/tenmsgs", tenantMsgs);
+app.use("/api/v1/lanmsgs", lanMsgs);
+
 app.use("/api/v1/auth", authRoute);
 app.use("/api/v1/admin", adminRoute);
 

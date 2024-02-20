@@ -1,10 +1,10 @@
 const router = require("express").Router();
-const User = require("../models/userModel");
+const Tenant = require("../models/tenantModel");
 
-// Get All Users 
-router.get("/allUsers", async (req, res) => {
+// Get All Tenants
+router.get("/alltenants", async (req, res) => {
     try {
-      const users = await User.find({isDeleted:false});
+      const users = await Tenant.find({isDeleted:false});
   
       res.status(200).json(users);
     } catch (error) {
@@ -13,16 +13,16 @@ router.get("/allUsers", async (req, res) => {
     }
   });
 
-// get users by landlord
-router.get("/:landlordId/lanUsers", async (req, res) => {
+// get tenants by landlord
+router.get("/:landlordId/lanTenants", async (req, res) => {
 
     try {
-        const lanUsers = await User.find({
+        const lanUsers = await Tenant.find({
             landlordId: req.params.landlordId, isDeleted:false
         })
         if(!lanUsers){
             res.status(404).json({
-                message:"Users Belonging to this Landlord not found"
+                message:"Tenants Belonging to this Landlord not found"
             })
         }
         else res.status(200).json(lanUsers)
@@ -32,11 +32,11 @@ router.get("/:landlordId/lanUsers", async (req, res) => {
 });
 
 
-// get user by branch
+// get tenants by branch
 router.get("/:branchId/branchUsers", async (req, res) => {
 branchId = req.params.branchId
     try {
-        const branchUser = await User.find({
+        const branchUser = await Tenant.find({
             branchId, isDeleted:false
         }).populate("branchId")
 
@@ -50,15 +50,15 @@ branchId = req.params.branchId
     }
 })
 
-// get user a single user
+// get a single tenant
 
 router.get("/:id", async(req, res)=>{
     try{
         const userId = req.params.id;
-        const user = await User.findById(userId);
+        const user = await Tenant.findById(userId);
     
         if(!user) {
-          res.status(404).json({ message: "user not found", code: 404 });
+          res.status(404).json({ message: "tenant not found", code: 404 });
         } 
         res.status(200).json(user)
       } catch (err) {
@@ -66,10 +66,10 @@ router.get("/:id", async(req, res)=>{
       }
 });
 
-// Get all archived user
+// Get all archived tenants
 router.get("/", async (req, res) => {
     try {
-      const archiveUser = await User.find({ isDeleted: true });
+      const archiveUser = await Tenant.find({ isDeleted: true });
   
       res.status(200).json(archiveUser);
     } catch (error) {
@@ -91,29 +91,55 @@ router.put("/update/:id", async (req, res) => {
         }
 
         // update user info
-        const updatedUser = await User.findByIdAndUpdate(req.params.id, {
+        const updatedUser = await Tenant.findByIdAndUpdate(req.params.id, {
             $set: req.body
         }, { new: true })
         // remove password from returned data
         const { password, ...rest } = updatedUser._doc;
 
         res.status(200).json({
-            message: "user updated successfully",
+            message: "tenant updated successfully",
             data: { ...rest }
         })
     } catch (error) {
         res.status(500).json({
             sucess: false,
-            message: "Can not update user"
+            message: "Can not update tenant"
         })
     }
 });
 
-// archive a user
+// register an admin
+router.post("/register", async(req, res)=>{
+    try {
+        // check if user exist
+        const user = await Tenant.findOne({ email: req.body.email })
+        if (user) {
+        
+            return res.status(404).json({
+                message:"Tenant Already Exist"
+            })
+        }
+        const tenant = new Tenant(req.body);
+         await tenant.save();
+         res.status(200).json({
+            success:true,
+            message:"Tenant Created Successfully"
+         }) 
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: error.message
+        }) 
+    }
+})
+
+
+// archive a tenant
 router.put("/:id/archive", async (req, res) => {
     try {
       const { id } = req.params;
-      const user = await User.findById(id);
+      const user = await Tenant.findById(id);
   
       if (!user) {
         return res
@@ -130,11 +156,11 @@ router.put("/:id/archive", async (req, res) => {
     }
   });
 
-// unarchive a user
+// unarchive a tenant
 router.put("/:id/unarchive", async (req, res) => {
   try {
     const { id } = req.params;
-    const user = await User.findById(id);
+    const user = await Tenant.findById(id);
 
     if (!user) {
       return res
@@ -145,26 +171,26 @@ router.put("/:id/unarchive", async (req, res) => {
     user.isDeleted = false; 
     await user.save(); 
 
-    res.status(200).json({ msg: "User unarchived" });
+    res.status(200).json({ msg: "Tenant unarchived" });
   } catch (err) {
     res.status(500).json({ err: err.message });
   }
 });
 
-//delete user account 
+//delete a tenant
 
 router.delete("/:id", async (req, res) => {
     try {
       const { id } = req.params;
-      const deletedUser = await User.findById(id);
+      const deletedUser = await Tenant.findById(id);
   
       if (!deletedUser) {
-        res.status(404).json({ msg: "User not found", code: 404 });
+        res.status(404).json({ msg: "Tenant not found", code: 404 });
       } else {
       
         await deletedUser.deleteOne();
   
-        res.status(200).json({ msg: "User deleted successfully", code: 200 });
+        res.status(200).json({ msg: "Tenant deleted successfully", code: 200 });
       }
     } catch (err) {
       res.status(500).json({ err: err.message });
@@ -173,4 +199,3 @@ router.delete("/:id", async (req, res) => {
   
 
 module.exports = router;
-

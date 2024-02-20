@@ -15,6 +15,10 @@ const lanmsgSchema = new mongoose.Schema({
     message:{
         type:String,
     },
+    isDeleted: {
+        type: Boolean,
+        default: false
+    },
     createdAt:{
         type:Date,
         default:Date.now
