@@ -15,6 +15,7 @@ const branchRoute = require("./routes/branchRoute");
 const tenantRoute = require("./routes/tenantRoute");
 const lanMsgs = require("./routes/landlordmsgRoute");
 const tenantMsgs = require ("./routes/tenantmsgRoute");
+const buildingRoute = require ("./routes/buildingRoute")
 
 // middleware
 
@@ -23,7 +24,7 @@ app.use("/api/v1/tenants", tenantRoute);
 
 app.use("/api/v1/tenmsgs", tenantMsgs);
 app.use("/api/v1/lanmsgs", lanMsgs);
-
+app.use("/api/v1/buildings", buildingRoute)
 app.use("/api/v1/auth", authRoute);
 app.use("/api/v1/admin", adminRoute);
 

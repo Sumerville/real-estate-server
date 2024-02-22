@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const buildingSchema = new mongoose.Schema({
-    property: {
+    title: {
         type: String,
         uppercase: true,
     },
@@ -45,18 +45,23 @@ const buildingSchema = new mongoose.Schema({
         type: String,
     },
     rating: {
-        type: String,
+        type: Number,
+        min: 0,
+        max: 5
     },
     desc: {
         type: String,
     },
     pix: {
-        type: String
+        type: [String]
+    },
+    appartment: {
+        type: [String]
     },
     isDeleted: {
         type: Boolean,
         default: false,
-      },
+    },
     createdAt: {
         type: Date,
         default: Date.now
