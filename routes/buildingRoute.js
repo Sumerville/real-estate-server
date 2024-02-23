@@ -1,10 +1,22 @@
 const router = require("express").Router();
 const Building = require("../models/buildingModel");
-// get all hotels
+
+// get all buildings
 
 router.get("/", async(req,res)=>{
+  try {
+     const buildings = await Building.find({isDeleted:false}) 
+     res.status(200).json({data:buildings})
+  } catch (error) {
+      res.status(500).json({error: error.message})   
+  }
+});
+
+// get buildings without archived ones
+
+router.get("/archived", async(req,res)=>{
     try {
-       const buildings = await Building.find() 
+       const buildings = await Building.find({isDeleted:true}) 
        res.status(200).json({data:buildings})
     } catch (error) {
         res.status(500).json({error: error.message})   
@@ -59,6 +71,18 @@ router.get("/:id/building", async (req, res) => {
     }
   });
 
+// Get archived buildings
+router.get("/", async (req, res) => {
+  try {
+    const archiveBuilding = await Building.find({ isDeleted: true });
+
+    res.status(200).json(archiveBuilding);
+  } catch (error) {
+ 
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 //create buildings
 
 router.post("/", async(req, res)=>{
@@ -69,6 +93,88 @@ res.status(200).json({data:savedBuilding})
 }catch(error){
 res.status(500).json({error: error.message})
 }
+});
+
+// archive a building
+router.put("/:id/archive", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const building = await Building.findById(id);
+
+    if (!building) {
+      return res
+        .status(404)
+        .json({ message: "The id supplied does not exist", code: 404 });
+    }
+
+    building.isDeleted = true; 
+    await building.save(); 
+
+    res.status(200).json({ message: "building archived" });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// unarchive a building
+router.put("/:id/unarchive", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const building = await Building.findById(id);
+
+    if (!building) {
+      return res
+        .status(404)
+        .json({ message: "The id supplied does not exist", code: 404 });
+    }
+
+    building.isDeleted = false; 
+    await building.save(); 
+
+    res.status(200).json({ msg: "building unarchived" });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+//update a building
+router.put("/updateBuilding/:id", async (req, res) => {
+  const buildingId = req.params.id;
+
+  try {
+      const updatedBuilding = await Building.findByIdAndUpdate(buildingId, {
+          $set: req.body
+      }, { new: true });
+      res.status(200).json({
+          success: true,
+          message: "building Updated successfully",
+          data: updatedBuilding
+      })
+  } catch (error) {
+      res.status(500).json({
+          success: false,
+          message: "cannot update building"
+      })
+  }
+});
+
+//delete a building
+router.delete("/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const deleteBuilding = await Building.findById(id);
+
+    if (!deleteBuilding) {
+      res.status(404).json({ message: "Building not found", code: 404 });
+    } else {
+    
+      await deleteBuilding.deleteOne();
+
+      res.status(200).json({ message: "Building deleted successfully", code: 200 });
+    }
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 });
 
 module.exports = router
