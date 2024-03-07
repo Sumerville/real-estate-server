@@ -168,6 +168,18 @@ router.put("/:id/rent", async (req, res) => {
     res.status(500).json(error)
   }
 });
+// rent flat without pushing id
+router.put("/:id/newrent", async (req, res) => {
+
+  try {
+    const post = await Flat.findById(req.params.id);
+    post.isAvailable = false;
+    await post.save();
+    res.status(200).json("Flat Rented")
+  } catch (error) {
+    res.status(500).json(error)
+  }
+});
 
 // Cancel Renting 
 router.put("/:id/unrent", async (req, res) => {
