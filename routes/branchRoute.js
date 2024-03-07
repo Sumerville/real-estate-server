@@ -55,7 +55,7 @@ router.get("/:landlordId/myBranches", async (req, res) => {
       } catch (error) {
         res.status(500).json({ error: error.message });
       }
-  })
+  });
 
 // Get archived branches
 router.get("/", async (req, res) => {
@@ -84,7 +84,7 @@ router.post("/register", async(req, res)=>{
             message: error.message
         }) 
     }
-})
+});
 
 //update a branch
 router.put("/updateBranch/:id", async (req, res) => {
@@ -167,4 +167,7 @@ router.delete("/:id", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+
+
+
 module.exports = router

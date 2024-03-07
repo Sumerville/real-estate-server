@@ -29,7 +29,7 @@ const buildingSchema = new mongoose.Schema({
     size: {
         type: String,
     },
-    location: {
+    city: {
         type: String,
     },
     address: {
@@ -56,7 +56,8 @@ const buildingSchema = new mongoose.Schema({
         type: [String]
     },
     appartment: {
-        type: [String]
+        type: [String],
+        ref:"buildingId"
     },
     isDeleted: {
         type: Boolean,

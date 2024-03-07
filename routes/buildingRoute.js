@@ -1,9 +1,32 @@
 const router = require("express").Router();
 const Building = require("../models/buildingModel");
 
-// get all buildings
-
+//get building by buildingType, city and buildingCategory
 router.get("/", async(req,res)=>{
+  try {
+    let buildings =[];
+    const {buildingType,buildingCategory, city,title } = req.query;
+    if(buildingType){
+      buildings = await Building.find({buildingType})
+    }
+   if(buildingCategory){
+      buildings = await Building.find({buildingCategory})
+    }
+   if(city){
+      buildings = await Building.find({city})
+    }
+   if(title){
+      buildings = await Building.find({title})
+    }
+    res.send({data:buildings})
+  } catch (error) {
+    return res.status(500).json(error)
+  }
+})
+
+
+// get all buildings
+router.get("/allBuildings", async(req,res)=>{
   try {
      const buildings = await Building.find({isDeleted:false}) 
      res.status(200).json({data:buildings})
@@ -11,6 +34,20 @@ router.get("/", async(req,res)=>{
       res.status(500).json({error: error.message})   
   }
 });
+
+// get the number of building for each category
+
+// router.get("/alltype", async(req,res)=>{
+//   const buildings = req.query.buildingType.split(",");
+//   try {
+//     const list = await Promise.all(buildings.map(building=>{
+// return Building.countDocuments({building:building})
+//     }))
+//     res.status(200).json(list)
+//   } catch (error) {
+//     res.status(500).json({error: error.message})  
+//   }
+// });
 
 // get buildings without archived ones
 
