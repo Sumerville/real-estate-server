@@ -109,7 +109,7 @@ router.put("/update/:id", async (req, res) => {
     }
 });
 
-// register an admin
+// register a tenant
 router.post("/register", async(req, res)=>{
     try {
         // check if user exist

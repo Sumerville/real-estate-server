@@ -1,5 +1,10 @@
 const router = require("express").Router();
 const Landlord = require("../models/landlordModel");
+const Branch = require("../models/branchModel");
+const Admin = require("../models/adminModel");
+const Tenant = require("../models/tenantModel");
+const TenantMsg = require("../models/tenantmsgModel");
+const Flat = require("../models/flatModel");
 
 // get all landlords
 router.get("/allLandlords", async (req, res) => {
@@ -174,5 +179,33 @@ router.delete("/:id", async (req, res) => {
       res.status(500).json({ error: error.message });
     }
   });
+
+  // deleting a landlord and all his posts
+  router.delete("/deleteLandlord/:id", async(req, res)=>{
+    if(req.body.userId === req.params.id){
+    try {
+      const user = await Landlord.findById(req.params.id)
+      try {
+       await Landlord.findByIdAndDelete(req.params.id);
+        await Branch.deleteMany({landlordId: user._id})
+        await Admin.deleteMany({landlordId: user._id})
+        await TenantMsg.deleteMany({landlordId: user._id})
+        await Tenant.deleteMany({landlordId: user._id})
+         await Flat.deleteMany({landlordId: user._id})
+        res.status(201).json("Landlord deleted ")
+      } catch (error) {
+       res.status(500).json(error) 
+       console.log(error)
+      }
+    
+    } catch (error) {
+     res.status(404).json("Landlord not found"); 
+     console.log(error)
+    }
+    
+    }else{
+      res.status(404).json("You can only delete your account");
+    }
+    });
 
 module.exports = router
