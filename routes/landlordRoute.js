@@ -5,6 +5,7 @@ const Admin = require("../models/adminModel");
 const Tenant = require("../models/tenantModel");
 const TenantMsg = require("../models/tenantmsgModel");
 const Flat = require("../models/flatModel");
+const Building = require("../models/buildingModel");
 
 // get all landlords
 router.get("/allLandlords", async (req, res) => {
@@ -188,6 +189,7 @@ router.delete("/:id", async (req, res) => {
       try {
        await Landlord.findByIdAndDelete(req.params.id);
         await Branch.deleteMany({landlordId: user._id})
+        await Building.deleteMany({landlordId: user._id})
         await Admin.deleteMany({landlordId: user._id})
         await TenantMsg.deleteMany({landlordId: user._id})
         await Tenant.deleteMany({landlordId: user._id})

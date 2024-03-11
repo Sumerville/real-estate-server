@@ -1,5 +1,9 @@
 const mongoose = require("mongoose");
 const flatSchema = new mongoose.Schema({
+    landlordId: {
+        type: String,
+       
+    },
     buildingId: {
         type: String,
        
