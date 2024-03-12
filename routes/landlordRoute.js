@@ -199,7 +199,6 @@ router.delete("/:id", async (req, res) => {
        res.status(500).json(error) 
        console.log(error)
       }
-    
     } catch (error) {
      res.status(404).json("Landlord not found"); 
      console.log(error)

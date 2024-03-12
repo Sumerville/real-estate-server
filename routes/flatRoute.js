@@ -156,8 +156,10 @@ router.put("/:id/rent", async (req, res) => {
 
   try {
     const post = await Flat.findById(req.params.id);
-
-    if (!post.owner.includes(req.body.userId)) {
+if(post.isAvailable == false){
+res.status(404).json("Flat not available")
+}
+  else  if (!post.owner.includes(req.body.userId)) {
       await post.updateOne({ $push: { owner: req.body.userId } });
       res.status(200).json("Flat Rented")
     }
