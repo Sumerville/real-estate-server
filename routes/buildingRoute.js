@@ -1,13 +1,13 @@
 const router = require("express").Router();
 const Building = require("../models/buildingModel");
 
-//get building by buildingType, city and buildingCategory
+//get building by propertyType, city and buildingCategory
 router.get("/", async(req,res)=>{
   try {
     let buildings =[];
-    const {buildingType,buildingCategory, city,title } = req.query;
-    if(buildingType){
-      buildings = await Building.find({buildingType})
+    const {propertyType,buildingCategory, city,title } = req.query;
+    if(propertyType){
+      buildings = await Building.find({propertyType})
     }
    if(buildingCategory){
       buildings = await Building.find({buildingCategory})
@@ -59,6 +59,18 @@ router.get("/archived", async(req,res)=>{
         res.status(500).json({error: error.message})   
     }
 });
+
+// get featured buildings 
+
+router.get("/featured", async(req,res)=>{
+  try {
+     const buildings = await Building.find({isFeatured:true}) 
+     res.status(200).json({data:buildings})
+  } catch (error) {
+      res.status(500).json({error: error.message})   
+  }
+});
+
 
 // get buildings by landlordId
 router.get("/:landlordId", async (req, res) => {

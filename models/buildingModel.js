@@ -4,7 +4,7 @@ const buildingSchema = new mongoose.Schema({
         type: String,
         uppercase: true,
     },
-    buildingType: {
+    propertyType: {
         type: String,
         uppercase: true,
     },
@@ -60,6 +60,10 @@ const buildingSchema = new mongoose.Schema({
         ref:"buildingId"
     },
     isDeleted: {
+        type: Boolean,
+        default: false,
+    },
+    isFeatured: {
         type: Boolean,
         default: false,
     },
