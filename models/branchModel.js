@@ -2,7 +2,11 @@ const mongoose = require("mongoose");
 const branchSchema = new mongoose.Schema({
     landlordId: {
         type: String,
-        ref: "landlords"
+        ref: "admins"
+    },
+    landlordName: {
+        type: String,
+
     },
     branchName: {
         type: String,

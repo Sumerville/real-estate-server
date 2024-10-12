@@ -14,11 +14,11 @@ router.get("/alltenants", async (req, res) => {
   });
 
 // get tenants by landlord
-router.get("/:landlordId/lanTenants", async (req, res) => {
+router.get("/:id/lanTenants", async (req, res) => {
 
     try {
         const lanUsers = await Tenant.find({
-            landlordId: req.params.landlordId, isDeleted:false
+            landlordId: req.params.id, isDeleted:false
         })
         if(!lanUsers){
             res.status(404).json({
@@ -33,8 +33,8 @@ router.get("/:landlordId/lanTenants", async (req, res) => {
 
 
 // get tenants by branch
-router.get("/:branchId/branchUsers", async (req, res) => {
-branchId = req.params.branchId
+router.get("/:id/branchUsers", async (req, res) => {
+branchId = req.params.id
     try {
         const branchUser = await Tenant.find({
             branchId, isDeleted:false

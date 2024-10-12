@@ -14,7 +14,7 @@ const buildingSchema = new mongoose.Schema({
     },
     landlordId: {
         type: String,
-        ref: "landlords"
+        ref: "admins"
     },
     branchId: {
         type: String,
@@ -22,14 +22,14 @@ const buildingSchema = new mongoose.Schema({
     },
     bathRoom: {
         type: String,
-    },
+    },                                                                                                                                                      
     bedRoom: {
         type: String,
     },
-    size: {
+    buildingSize: {
         type: String,
     },
-    city: {
+    situated: {
         type: String,
     },
     address: {
@@ -41,9 +41,6 @@ const buildingSchema = new mongoose.Schema({
     newPrice: {
         type: String,
     },
-    review: {
-        type: String,
-    },
     rating: {
         type: Number,
         min: 0,
@@ -53,11 +50,7 @@ const buildingSchema = new mongoose.Schema({
         type: String,
     },
     pix: {
-        type: [String]
-    },
-    appartment: {
-        type: [String],
-        ref:"buildingId"
+        type: String,
     },
     isDeleted: {
         type: Boolean,

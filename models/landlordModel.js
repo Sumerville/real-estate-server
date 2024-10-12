@@ -6,12 +6,19 @@ const landlordSchema = new mongoose.Schema({
    email:{
     type:String,
    },
-   password:{
-    type:String,
-   },
+   adminId: {
+    type: String,
+},
    address:{
     type:String,
    },
+   phone: {
+    type: String,
+    required: true,
+  },
+  image: {
+    type: String,
+  },
    isDeleted: {
     type: Boolean,
     default: false

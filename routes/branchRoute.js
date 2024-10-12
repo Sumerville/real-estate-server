@@ -1,27 +1,44 @@
 const router = require("express").Router();
 const Landlord = require("../models/landlordModel");
 const Branch = require("../models/branchModel")
-
+const {validationResult}= require  ("express-validator")
 
 // get all branches
 
 router.get("/allBranches", async (req, res) => {
     try {
-      const { landlord } = req.query;
-      let branches = [];
-  
-      if (landlord) {
-        branches = await Branch.find({ landlordId: landlord }).populate(
-          "landlordId"
-        );
-      } else {
-        branches = await Branch.find()
+      const branches = await Branch.find().populate("landlordId").select("-password")
+      if(!branches){
+        res.status(404).json({ message: "Branches not found", code: 404 });
       }
-      res.json(branches);
+      res.status(200).json(branches);
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
   });
+
+// Get all branches
+router.get("/", async (req, res) => {
+  try {
+    const { landlord } = req.query;
+    let branches = [];
+
+    if (landlord) {
+      branches = await Branch.find({ landlord_id: landlord }).populate(
+        "landlorId"
+      );
+    } else {
+      branches = await Branch.find().populate("landlordId");
+    }
+    res.status(200).json({
+      success:true,
+      branches
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 
 // Get a branch by ID
 router.get("/:id", async (req, res) => {
@@ -42,22 +59,19 @@ router.get("/:id", async (req, res) => {
 
 // get branches by landlordId
   
-router.get("/:landlordId/myBranches", async (req, res) => {
-  landlordId = req.params.landlordId
+router.get("/:id/myBranches", async (req, res) => {
+  const landlordId = req.params.id
       try {
           const branches = await Branch.find({
               landlordId, isDeleted:false
-          }).populate("landlordId")
-           res.status(200).json({
-              success: true,
-              data: { branches }
-          })
+          }).populate("landlordId").select("-password")
+           res.status(200).json(branches)
       } catch (error) {
         res.status(500).json({ error: error.message });
       }
   });
 
-// Get archived branches
+// Get all archived branches 
 router.get("/", async (req, res) => {
   try {
     const archiveBranch = await Branch.find({ isDeleted: true });
@@ -69,8 +83,25 @@ router.get("/", async (req, res) => {
   }
 });
 
+// Get archived branches by landlord
+router.get("/:id/myArchives", async (req, res) => {
+  const landlordId = req.params.id
+      try {
+          const branches = await Branch.find({
+              landlordId, isDeleted:true
+          })
+           res.status(200).json(branches)
+      } catch (error) {
+        res.status(500).json({ error: error.message });
+      }
+  });
+
 // register Branch
 router.post("/register", async(req, res)=>{
+  const errors =validationResult(req)
+  if(!errors.isEmpty()){
+    return res.status(400).json({errors: errors.array()})
+}
     try {
         const branch = new Branch(req.body);
          await branch.save();
@@ -79,10 +110,10 @@ router.post("/register", async(req, res)=>{
             message:"Branch Created Successfully"
          }) 
     } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: error.message
-        }) 
+      res.status(500).json({
+        success: false,
+        errors:[{msg:"Network error"}]
+    }) 
     }
 });
 

@@ -18,6 +18,10 @@ const tenantSchema = new mongoose.Schema({
     mobile: {
         type: String,
     },
+    userId: {
+        type: String,
+        ref: "users"
+    },
     landlordId: {
         type: String,
         ref: "landlords"
@@ -30,8 +34,9 @@ const tenantSchema = new mongoose.Schema({
         type: String,
         ref: "buildings"
     },
-    appartment: {
+    flatId: {
         type: String,
+        ref: "flats"
     },
     isVerified: {
         type: Boolean,

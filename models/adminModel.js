@@ -5,19 +5,36 @@ userName:{
 },
 landlordId:{
     type:String,
-    ref:"landlords"
+    ref:"landlords",
+    default: "653b94d73c3207e6949bc212",
 },
 branchId:{
     type:String,
-    ref:"branches"
+    ref:"branches",
+    default: "653b94d73c3207e6949bc212",
 },
 email:{
     type:String,
 },
+role: {
+    type: String,
+    enum: ["ADMIN", "LANDLORD", "BRANCH",],
+    uppercase: true,
+  },
+  address:{
+type:String,
+  },
+  phone:{
+    type:String,
+      },
 password:{
     type:String,
 },
 isDeleted: {
+    type: Boolean,
+    default: false
+},
+isVerified: {
     type: Boolean,
     default: false
 },

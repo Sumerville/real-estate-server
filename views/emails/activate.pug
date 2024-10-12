@@ -1,0 +1,17 @@
+extends baseEmail
+
+block content
+    p Hi #{userName},
+    p Welcome to Sumer Homes, we're glad to have you 🎉🙏
+    p Please activate your account so you can access the web application.
+    table.btn.btn-primary(role='presentation', border='0', cellpadding='0', cellspacing='0')
+        tbody
+            tr
+                td(align='left')
+                    table(role='presentation', border='0', cellpadding='0', cellspacing='0')
+                        tbody
+                            tr
+                                td
+                                    p Here's your password:
+                                        span #{code}
+    p If you need any help with activating your account, please don't hesitate to contact us! 

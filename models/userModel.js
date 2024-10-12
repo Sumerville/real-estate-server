@@ -24,21 +24,6 @@ const userSchema = new mongoose.Schema({
     mobile: {
         type: String,
     },
-    landlordId: {
-        type: String,
-        ref: "landlords"
-    },
-    branchId: {
-        type: String,
-        ref: "branches"
-    },
-    buildingId: {
-        type: String,
-        ref: "buildings"
-    },
-    appartment: {
-        type: String,
-    },
     isVerified: {
         type: Boolean,
         default: false
@@ -46,12 +31,6 @@ const userSchema = new mongoose.Schema({
     isDeleted: {
         type: Boolean,
         default: false
-    },
-    rentage: {
-        type: String,
-    },
-    dueDate: {
-        type: String,
     },
     photo: {
         type: String,

@@ -12,9 +12,9 @@ const tenantmsgSchema = new mongoose.Schema({
         type:String,
         ref:"buildings"
     },
-    tenantId:{
+    userId:{
         type:String,
-        ref:"tenants"
+        ref:"users"
     },
     message:{
         type:String,
